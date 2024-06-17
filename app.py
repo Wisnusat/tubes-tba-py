@@ -3,36 +3,47 @@ from parser_pda import PDAHTMLParser
 from token_recognizer import DFATokenRecognizer
 
 def main():
-    st.title("Kalimat SPOK Validator")
+    st.set_page_config(page_title="Validator Struktur Kalimat", page_icon="📝")
+
+    st.title("Validasi Struktur Kalimat SPOK")
     st.write("##### Anggota Kelompok: ")
     st.write("##### - Wisnu Satrio Agung     | 1301223456")
     st.write("##### - Muhammad Alvito Naufal | 1301223342")
     st.write("##### - Bintang Rizky          | 1301223104")
     st.write("")
     st.write("")
-
     st.write("""
-    Masukkan kalimat berbahasa Indonesia untuk memeriksa kevalidan struktur SPOK-nya.
-    Struktur yang dikenali adalah:
-    - S – P – O – K
-    - S – P – K
-    - S – P – O
-    - S – P
+    Selamat datang di aplikasi validasi struktur kalimat SPOK!
+    Aplikasi ini memeriksa apakah kalimat yang Anda masukkan sesuai dengan pola SPOK yang valid.
+    Pola yang dikenali meliputi:
+    - Subyek (S) – Predikat (P) – Obyek (O) – Keterangan (K)
+    - Subyek (S) – Predikat (P) – Keterangan (K)
+    - Subyek (S) – Predikat (P) – Obyek (O)
+    - Subyek (S) – Predikat (P)
     """)
 
-    # Tampilkan daftar kalimat yang dikenali oleh token recognizer
-    st.write("### Daftar Kata yang Dikenali:")
+    st.write("### Kata yang Dikenali")
     recognizer = DFATokenRecognizer()
-    st.write("#### Subyek (S):")
-    st.write(", ".join([key for key, value in recognizer.accepting_states.items() if value == "S"]))
-    st.write("#### Predikat (P):")
-    st.write(", ".join([key for key, value in recognizer.accepting_states.items() if value == "P"]))
-    st.write("#### Obyek (O):")
-    st.write(", ".join([key for key, value in recognizer.accepting_states.items() if value == "O"]))
-    st.write("#### Keterangan (K):")
-    st.write(", ".join([key for key, value in recognizer.accepting_states.items() if value == "K"]))
+    col1, col2, col3, col4 = st.columns(4)
 
-    sentence = st.text_area("Masukkan kalimat:")
+    with col1:
+        st.write("##### Subyek (S):")
+        st.write("\n".join([f"- {key}" for key, value in recognizer.accepting_states.items() if value == "S"]))
+
+    with col2:
+        st.write("##### Predikat (P):")
+        st.write("\n".join([f"- {key}" for key, value in recognizer.accepting_states.items() if value == "P"]))
+
+    with col3:
+        st.write("##### Obyek (O):")
+        st.write("\n".join([f"- {key}" for key, value in recognizer.accepting_states.items() if value == "O"]))
+
+    with col4:
+        st.write("##### Keterangan (K):")
+        st.write("\n".join([f"- {key}" for key, value in recognizer.accepting_states.items() if value == "K"]))
+
+    st.write("### Masukkan Kalimat Anda di Bawah Ini")
+    sentence = st.text_area("Kalimat:", placeholder="Contoh: aku membaca buku di taman")
 
     if st.button("Periksa"):
         parser = PDAHTMLParser()
@@ -40,6 +51,9 @@ def main():
         st.write(f"Hasil: {result}")
         st.write(f"Struktur Kalimat: {'-'.join(structure)}")
         sentence = ""
+    
+    st.write("---")
+    st.write("Dibuat dengan ❤️ oleh orang jawa x lampung x makassar")
 
 if __name__ == "__main__":
     main()
